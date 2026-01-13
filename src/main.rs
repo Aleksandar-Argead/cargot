@@ -44,8 +44,11 @@ fn run_app(terminal: &mut Terminal<CrosstermBackend<io::Stdout>>, app: &mut App)
 
         if let Event::Key(key) = event::read()? {
             if key.kind == KeyEventKind::Press {
-                match key.code {
-                    KeyCode::Char('q') | KeyCode::Esc => return Ok(()),
+                match ui::handler::handle_key(app, key) {
+                    ui::handler::HandleResult::Quit => return Ok(()),
+                    ui::handler::HandleResult::Handled => {} // continue
+                    ui::handler::HandleResult::NotHandled => {} // can log if you want
+
                     // More keys will be handled later via app / handler
                     _ => {}
                 }

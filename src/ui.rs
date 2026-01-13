@@ -3,3 +3,4 @@ pub mod details;
 pub mod footer;
 pub mod layout;
 pub mod project;
+pub mod handler;

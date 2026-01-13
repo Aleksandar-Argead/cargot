@@ -1,29 +1,37 @@
 use ratatui::{
     prelude::*,
-    widgets::{Block, Borders, Paragraph},
+    widgets::{Block, BorderType, Borders, Paragraph},
 };
 
 use crate::app::{App, Panel};
 
 pub fn draw(frame: &mut Frame, app: &App, area: Rect) {
-    let focus_style = if app.is_focused(Panel::Project) {
-        Style::default().fg(Color::Cyan)
+    let is_focused = app.is_focused(Panel::Project);
+
+    let border_style = if is_focused {
+        Style::default()
+            .fg(Color::Cyan)
+            .add_modifier(Modifier::BOLD)
     } else {
-        Style::default().fg(Color::Gray)
+        Style::default().fg(Color::DarkGray)
     };
 
-    let text = format!(
-        "Project: my-awesome-crate\n\
-         Version: 0.1.0\n\
-         Toolchain: stable (rustc 1.81.0)\n\
-         Outdated: 5    Vulns: 1"
-    );
+    let title_style = if is_focused {
+        Style::default()
+            .fg(Color::Cyan)
+            .add_modifier(Modifier::BOLD)
+    } else {
+        Style::default()
+    };
+
+    let text = "... project info ...";
 
     let paragraph = Paragraph::new(text).block(
         Block::default()
-            .title(" Project ")
+            .title(Span::styled(" Project ", title_style))
             .borders(Borders::ALL)
-            .border_style(focus_style),
+            .border_style(border_style)
+            .border_type(BorderType::Rounded),
     );
 
     frame.render_widget(paragraph, area);

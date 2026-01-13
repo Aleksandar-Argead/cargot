@@ -1,17 +1,20 @@
 use ratatui::{
     prelude::*,
-    widgets::{Block, Borders, List, ListItem},
+    widgets::{Block, BorderType, Borders, List, ListItem},
 };
 
 use crate::app::{App, Panel};
 
 pub fn draw(frame: &mut Frame, app: &App, area: Rect) {
-    let focus_style = if app.is_focused(Panel::Dependencies) {
-        Style::default().fg(Color::Cyan)
-    } else {
-        Style::default().fg(Color::Gray)
-    };
+    let is_focused = app.is_focused(Panel::Dependencies);
 
+    let border_style = if is_focused {
+        Style::default()
+            .fg(Color::Cyan)
+            .add_modifier(Modifier::BOLD)
+    } else {
+        Style::default().fg(Color::DarkGray)
+    };
     let items: Vec<ListItem> = app
         .dependencies
         .iter()
@@ -23,7 +26,8 @@ pub fn draw(frame: &mut Frame, app: &App, area: Rect) {
             Block::default()
                 .title(" Dependencies ")
                 .borders(Borders::ALL)
-                .border_style(focus_style),
+                .border_style(border_style)
+                .border_type(BorderType::Rounded),
         )
         .highlight_style(
             Style::default()
